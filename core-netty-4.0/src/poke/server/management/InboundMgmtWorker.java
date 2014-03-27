@@ -102,6 +102,7 @@ public class InboundMgmtWorker extends Thread {
 				} else if (req.hasJobPropose()) {
 					JobManager.getInstance().processRequest(req.getJobPropose());
 				} else
+					
 					logger.error("Unknown management message");
 
 			} catch (InterruptedException ie) {

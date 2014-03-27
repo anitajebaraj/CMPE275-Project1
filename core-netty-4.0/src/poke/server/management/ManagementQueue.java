@@ -42,7 +42,7 @@ public class ManagementQueue {
 	private static InboundMgmtWorker iworker;
 
 	// not the best method to ensure uniqueness
-	private static ThreadGroup tgroup = new ThreadGroup("ManagementQueue-"
+	private static ThreadGroup tgroup = new ThreadGroup("ServerQueue-"
 			+ System.nanoTime());
 
 	public static void startup() {

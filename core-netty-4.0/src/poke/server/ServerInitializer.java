@@ -39,8 +39,9 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
 		// pipeline.addLast("frameDecoder", new
 		// DebugFrameDecoder(67108864, 0, 4, 0, 4));
 
-		// decoder must be first
+		// decoder must be first 
 		pipeline.addLast("protobufDecoder", new ProtobufDecoder(eye.Comm.Request.getDefaultInstance()));
+
 		pipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
 		pipeline.addLast("protobufEncoder", new ProtobufEncoder());
 

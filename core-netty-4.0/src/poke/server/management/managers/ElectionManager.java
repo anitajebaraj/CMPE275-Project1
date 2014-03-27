@@ -130,7 +130,6 @@ public class ElectionManager extends Thread{
 		while (true) {
 			try {
 				Thread.sleep(5000);
-logger.info("comin innn");
 logger.info("outgoingHB.size() in election===="+HeartbeatManager.getInstance().outgoingHB.size());
 				// ignore until we have edges with other nodes
 				if (HeartbeatManager.getInstance().outgoingHB.size() > 0) 

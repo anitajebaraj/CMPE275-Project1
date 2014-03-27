@@ -86,6 +86,7 @@ public class CommHandler extends SimpleChannelInboundHandler<eye.Comm.Request> {
 	 */
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, eye.Comm.Request msg) throws Exception {
+		logger.info("in communication handler read!!!!");
 		for (String id : listeners.keySet()) {
 			CommListener cl = listeners.get(id);
 
@@ -94,4 +95,5 @@ public class CommHandler extends SimpleChannelInboundHandler<eye.Comm.Request> {
 			cl.onMessage(msg);
 		}
 	}
+	
 }

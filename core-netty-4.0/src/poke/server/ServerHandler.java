@@ -50,24 +50,30 @@ public class ServerHandler extends SimpleChannelInboundHandler<eye.Comm.Request>
 	private ChannelQueue queue;
 
 	public ServerHandler() {
-		// logger.info("** ServerHandler created **");
+		 logger.info("** ServerHandler created **");	 
 	}
-
+	
 	@Override
 	public void channelRead0(ChannelHandlerContext ctx, eye.Comm.Request req) throws Exception {
 		// processing is deferred to the worker threads
-		logger.info("---> server got a message");
-		queueInstance(ctx.channel()).enqueueRequest(req, ctx.channel());
+	
+		logger.info("---> server got a message"+ req);
+		ServerQueue.enqueueRequest(req, ctx.channel(),ctx.channel().remoteAddress());
+
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		logger.info("Channel is inactive");
 
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		logger.error("Unexpected exception from downstream.", cause);
+		
+		logger.info("channel is=="+ctx);
+		logger.error("Unexpected exception from downstream happening in server handler", cause);
+		
 		ctx.close();
 	}
 

@@ -27,7 +27,7 @@ public class ManagementHandler extends SimpleChannelInboundHandler<eye.Comm.Mana
 	protected static Logger logger = LoggerFactory.getLogger("management");
 
 	public ManagementHandler() {
-		// logger.info("** HeartbeatHandler created **");
+		logger.info("** Management Handler created **");
 	}
 
 	@Override

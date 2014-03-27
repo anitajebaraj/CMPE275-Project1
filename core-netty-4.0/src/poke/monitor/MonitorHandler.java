@@ -42,6 +42,7 @@ public class MonitorHandler extends SimpleChannelInboundHandler<eye.Comm.Managem
 	private volatile Channel channel;
 
 	public MonitorHandler() {
+		logger.info("Monitor Handler is created----> (Client)");
 	}
 
 	public String getNodeId() {
@@ -81,6 +82,7 @@ public class MonitorHandler extends SimpleChannelInboundHandler<eye.Comm.Managem
 	 */
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, eye.Comm.Management msg) throws Exception {
+		logger.info("---->monitor handler got a message");
 		for (String id : listeners.keySet()) {
 			MonitorListener ml = listeners.get(id);
 

@@ -16,6 +16,7 @@
 package poke.server;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import poke.client.util.ClientListener;
 import poke.server.conf.JsonUtil;
 import poke.server.conf.NodeDesc;
 import poke.server.conf.ServerConf;
@@ -113,6 +115,57 @@ public class Server {
 		if (HeartbeatManager.getInstance() != null)
 			HeartbeatManager.getInstance().release();
 	}
+	//Anita
+	private static class StartLeaderClientCommunication implements Runnable{
+		ServerConf conf;
+		public StartLeaderClientCommunication(ServerConf conf)
+		{
+			this.conf=conf;
+		}
+		public void run() {
+			// construct boss and worker threads (num threads = number of cores)
+
+			EventLoopGroup clientGroup = new NioEventLoopGroup();
+			//str is the leader port so handle as per that
+			try {
+				String str = conf.getServer().getProperty("port");
+				if (str == null) {
+					logger.info("Assuming this as leader");
+					str = "5570";
+				}
+
+				int port = Integer.parseInt(str);
+
+				ServerBootstrap b = new ServerBootstrap();
+				bootstrap.put(port, b);
+
+				b.group(clientGroup);
+				b.channel(NioServerSocketChannel.class);
+				b.option(ChannelOption.SO_BACKLOG, 100);
+				b.option(ChannelOption.TCP_NODELAY, true);
+				b.option(ChannelOption.SO_KEEPALIVE, true);
+				// b.option(ChannelOption.MESSAGE_SIZE_ESTIMATOR);
+
+				boolean compressComm = false;
+				b.childHandler(new ServerInitializer(compressComm));
+
+				// Start the server.
+				logger.info("Starting server " + conf.getServer().getProperty("node.id") + ", listening on port = "
+						+ port);
+				ChannelFuture f = b.bind(port).syncUninterruptibly();
+
+				
+				f.channel().closeFuture().sync();
+			} catch (Exception ex) {
+				// on bind().sync()
+				logger.error("Failed to setup public handler.", ex);
+			} finally {
+				// Shut down all event loops to terminate all threads.
+				clientGroup.shutdownGracefully();
+			}
+		}
+	}
+	//~Anita
 
 	/**
 	 * initialize the outward facing (public) interface
@@ -129,7 +182,7 @@ public class Server {
 
 		public void run() {
 			// construct boss and worker threads (num threads = number of cores)
-
+			logger.info("Sstart Communication");
 			EventLoopGroup bossGroup = new NioEventLoopGroup();
 			EventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -157,15 +210,14 @@ public class Server {
 
 				boolean compressComm = false;
 				b.childHandler(new ServerInitializer(compressComm));
-
+				
 				// Start the server.
-				logger.info("Starting server " + conf.getServer().getProperty("node.id") + ", listening on port = "
+				logger.info("Starting server in startttt commn " + conf.getServer().getProperty("node.id") + ", listening on port = "
 						+ port);
 				ChannelFuture f = b.bind(port).syncUninterruptibly();
 
 				// should use a future channel listener to do this step
 				// allChannels.add(f.channel());
-
 				// block until the server socket is closed.
 				f.channel().closeFuture().sync();
 			} catch (Exception ex) {
@@ -203,7 +255,6 @@ public class Server {
 
 			EventLoopGroup bossGroup = new NioEventLoopGroup();
 			EventLoopGroup workerGroup = new NioEventLoopGroup();
-
 			try {
 				String str = conf.getServer().getProperty("port.mgmt");
 				int mport = Integer.parseInt(str);
@@ -281,6 +332,7 @@ public class Server {
 
 		// start the inbound and outbound manager worker threads
 				ManagementQueue.startup();
+				ServerQueue.startup();
 		
 		logger.info("Server " + myId + ", managers initialized");
 	}
@@ -302,12 +354,15 @@ public class Server {
 
 		startManagers();
 		
+		//ClientListener cl=new ClientListener();
+		//cl.start();//Anita
+		
 		StartManagement mgt = new StartManagement(conf);
 		Thread mthread = new Thread(mgt);
 		mthread.start();
 
 		StartCommunication comm = new StartCommunication(conf);
-		logger.info("Server " + myId + " ready");
+		logger.info("Server Anitaaaa" + myId + " ready");
 		
 		Thread cthread = new Thread(comm);
 		cthread.start();
