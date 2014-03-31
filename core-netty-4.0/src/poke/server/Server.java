@@ -206,7 +206,8 @@ public class Server {
 				b.option(ChannelOption.SO_BACKLOG, 100);
 				b.option(ChannelOption.TCP_NODELAY, true);
 				b.option(ChannelOption.SO_KEEPALIVE, true);
-				// b.option(ChannelOption.MESSAGE_SIZE_ESTIMATOR);
+				//b.option(ChannelOption.AUTO_READ,true);
+				b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
 
 				boolean compressComm = false;
 				b.childHandler(new ServerInitializer(compressComm));

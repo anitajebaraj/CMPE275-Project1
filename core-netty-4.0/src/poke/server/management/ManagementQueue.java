@@ -28,7 +28,7 @@ import eye.Comm.Management;
 /**
  * The management queue exists as an instance per process (node)
  * 
- * @author gash
+ * @author gash 
  * 
  */
 public class ManagementQueue {
@@ -40,7 +40,6 @@ public class ManagementQueue {
 	// TODO static is problematic
 	private static OutboundMgmtWorker oworker;
 	private static InboundMgmtWorker iworker;
-
 	// not the best method to ensure uniqueness
 	private static ThreadGroup tgroup = new ThreadGroup("ServerQueue-"
 			+ System.nanoTime());

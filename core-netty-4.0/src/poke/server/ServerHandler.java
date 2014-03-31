@@ -44,7 +44,7 @@ import poke.server.queue.QueueFactory;
  * @author gash
  * 
  */
-public class ServerHandler extends SimpleChannelInboundHandler<eye.Comm.Request> {
+public class ServerHandler extends SimpleChannelInboundHandler<eye.TestMessage2.UserLogin> {
 	protected static Logger logger = LoggerFactory.getLogger("server");
 
 	private ChannelQueue queue;
@@ -54,13 +54,19 @@ public class ServerHandler extends SimpleChannelInboundHandler<eye.Comm.Request>
 	}
 	
 	@Override
-	public void channelRead0(ChannelHandlerContext ctx, eye.Comm.Request req) throws Exception {
+	public void channelRead0(ChannelHandlerContext ctx, eye.TestMessage2.UserLogin req) throws Exception {
 		// processing is deferred to the worker threads
 	
 		logger.info("---> server got a message"+ req);
-		ServerQueue.enqueueRequest(req, ctx.channel(),ctx.channel().remoteAddress());
+		//ServerQueue.enqueueRequest(req, ctx.channel(),ctx.channel().remoteAddress());
 
 	}
+	@Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		logger.info("Channel is Active");
+
+	}
+
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {

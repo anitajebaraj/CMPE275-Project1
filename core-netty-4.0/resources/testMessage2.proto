@@ -1,0 +1,5 @@
+message UserLogin {
+required string clientName = 1;
+optional string request_type = 2;
+}
+
